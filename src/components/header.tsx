@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaSearch,
@@ -6,15 +7,27 @@ import {
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
-import { useState } from "react";
 
-const user = { _id: "", role: "admin" };
+import { User } from "../types/types";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import toast from "react-hot-toast";
 
-function Header() {
+interface PropsType {
+  user: User | null;
+}
+
+function Header({ user }: PropsType) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const logoutHandler = () => {
-    setIsOpen(false);
+  const logoutHandler = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Logged out successfully");
+      setIsOpen(false);
+    } catch (error) {
+      toast.error("Logged out failed");
+    }
   };
 
   return (

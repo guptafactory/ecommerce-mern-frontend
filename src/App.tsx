@@ -1,6 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -29,14 +31,39 @@ const TransactionManagement = lazy(
   () => import("./pages/admin/management/transactionmanagement")
 );
 
-// Components import
+// Components
 import Header from "./components/header";
 import Loader from "./components/loader";
+import ProtectedRoute from "./components/protectedRoute";
+
+import { auth } from "./firebase";
+import { userExist, userNotExist } from "./redux/reducer/userReducer";
+import { getUser } from "./redux/api/userAPI";
+import { UserReducerInitialState } from "./types/reducer-types";
 
 function App() {
-  return (
+  const { user, loading } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const data = await getUser(user.uid);
+        dispatch(userExist(data.user));
+      } else {
+        dispatch(userNotExist());
+      }
+    });
+    return () => {};
+  }, [dispatch]);
+
+  return loading ? (
+    <Loader />
+  ) : (
     <Router>
-      <Header />
+      <Header user={user} />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />}></Route>
@@ -44,17 +71,35 @@ function App() {
           <Route path="/cart" element={<Cart />}></Route>
 
           {/* Not logged in User Routes */}
-          <Route path="/login" element={<Login />}></Route>
+          <Route
+            path="/login"
+            element={
+              // if user exists, then user is set not authenticated for this route deliberately
+              <ProtectedRoute isAuthenticated={user ? false : true}>
+                <Login />
+              </ProtectedRoute>
+            }
+          ></Route>
 
           {/* Logged in User Routes */}
-          <Route>
+          <Route
+            element={<ProtectedRoute isAuthenticated={user ? true : false} />}
+          >
             <Route path="/shipping" element={<Shipping />}></Route>
             <Route path="/orders" element={<Orders />}></Route>
             <Route path="/order/:id" element={<OrderDetails />}></Route>
           </Route>
 
           {/* Admin Routes */}
-          <Route>
+          <Route
+            element={
+              <ProtectedRoute
+                isAuthenticated={true}
+                adminOnly={true}
+                admin={user?.role === "admin" ? true : false}
+              />
+            }
+          >
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/product" element={<Products />} />
             <Route path="/admin/customer" element={<Customers />} />
