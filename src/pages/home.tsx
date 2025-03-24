@@ -1,8 +1,16 @@
-import { Link } from 'react-router-dom';
-import ProductCard from '../components/productCard';
+import { Link } from "react-router-dom";
+import ProductCard from "../components/productCard";
+import { useLatestProductsQuery } from "../redux/api/productAPI";
+import toast from "react-hot-toast";
+import { SkeletonLoader } from "../components/loader";
 
 function Home() {
+  const { data, isError, isLoading } = useLatestProductsQuery("");
+
   const addToCartHandler = () => {};
+  if (isError) {
+    toast.error("Failed to fetch products");
+  }
 
   return (
     <div className="home">
@@ -10,20 +18,27 @@ function Home() {
 
       <h1>
         Latest products
-        <Link to={'/search'} className="findmore">
+        <Link to={"/search"} className="findmore">
           More
         </Link>
       </h1>
 
       <main>
-        <ProductCard
-          productId="abc"
-          name="abc"
-          photo="https://m.media-amazon.com/images/I/71an9eiBxpL._SX250_.jpg"
-          price={123}
-          stock={123}
-          handler={addToCartHandler}
-        />
+        {isLoading ? (
+          <SkeletonLoader width="80vw" />
+        ) : (
+          data?.products.map((product) => (
+            <ProductCard
+              key={product._id}
+              productId={product._id}
+              name={product.name}
+              photo={product.photo}
+              price={product.price}
+              stock={product.stock}
+              handler={addToCartHandler}
+            />
+          ))
+        )}
       </main>
     </div>
   );
