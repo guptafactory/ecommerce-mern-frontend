@@ -1,17 +1,74 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+
+import {
+  useCategoriesQuery,
+  useSearchProductsQuery,
+} from "../redux/api/productAPI";
+
 import ProductCard from "../components/productCard";
+import { SkeletonLoader } from "../components/loader";
+import { CustomError } from "../types/api-types";
 
 function Search() {
+  const {
+    data: categoriesResponse,
+    isLoading: isLoadingCategories,
+    isError: isErrorCategories,
+    error: errorCategories,
+  } = useCategoriesQuery("");
+
   const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<number>(100);
   const [maxPrice, setMaxPrice] = useState<number>(10000);
   const [category, setCategory] = useState<string>("");
   const [page, setPage] = useState<number>(1);
 
-  const isPrevPage = page > 1;
-  const isNextPage = page < 4;
+  const {
+    data: searchedData,
+    isLoading: isLoadingSearchedData,
+    isError: isErrorSearchedData,
+    error: errorSearchedData,
+  } = useSearchProductsQuery({
+    search,
+    minPrice: minPrice.toString(),
+    maxPrice: maxPrice.toString(),
+    category,
+    sort,
+    page: page.toString(),
+  });
+
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < (searchedData ? searchedData?.totalPages : 1);
 
   const addToCartHandler = () => {};
+
+  if (isErrorCategories) {
+    const err = errorCategories as CustomError;
+    toast.error(err.data.message);
+  }
+
+  if (isErrorSearchedData) {
+    const err = errorSearchedData as CustomError;
+    toast.error(err.data.message);
+  }
+
+  const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (Number(e.target.value) > maxPrice) {
+      setMinPrice(maxPrice);
+      return;
+    }
+    setMinPrice(Number(e.target.value));
+  };
+
+  const handleMaxPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (Number(e.target.value) < minPrice) {
+      setMaxPrice(minPrice);
+      return;
+    }
+    setMaxPrice(Number(e.target.value));
+  };
 
   return (
     <div className="product-search-range">
@@ -28,13 +85,24 @@ function Search() {
         </div>
 
         <div>
+          <h4>Min Price: {minPrice || ""}</h4>
+          <input
+            type="range"
+            min={100}
+            max={100000}
+            value={minPrice}
+            onChange={(e) => handleMinPrice(e)}
+          />
+        </div>
+
+        <div>
           <h4>Max Price: {maxPrice || ""}</h4>
           <input
             type="range"
             min={100}
             max={100000}
             value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
+            onChange={(e) => handleMaxPrice(e)}
           />
         </div>
 
@@ -44,9 +112,13 @@ function Search() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">All</option>
-            <option value="s1">Sample 1</option>
-            <option value="s2">Sample 2</option>
+            <option value="">ALL</option>
+            {!isLoadingCategories &&
+              categoriesResponse?.categories.map((catg) => (
+                <option key={catg} value={catg}>
+                  {catg.toUpperCase()}
+                </option>
+              ))}
           </select>
         </div>
       </aside>
@@ -60,32 +132,43 @@ function Search() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div className="search-product-list">
-          <ProductCard
-            productId="abc"
-            name="abc"
-            photo="https://m.media-amazon.com/images/I/71an9eiBxpL._SX250_.jpg"
-            price={123}
-            stock={123}
-            handler={addToCartHandler}
-          />
-        </div>
+        {isLoadingSearchedData ? (
+          <SkeletonLoader width="5" />
+        ) : (
+          <div className="search-product-list">
+            {searchedData?.products.map((prod) => (
+              <ProductCard
+                key={prod._id}
+                productId={prod._id}
+                name={prod.name}
+                photo={prod.photo}
+                price={prod.price}
+                stock={prod.stock}
+                handler={addToCartHandler}
+              />
+            ))}
+          </div>
+        )}
 
-        <article>
-          <button
-            onClick={() => setPage((prev) => prev - 1)}
-            disabled={!isPrevPage}
-          >
-            Prev
-          </button>
-          <span>{page} of 4</span>
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={!isNextPage}
-          >
-            Next
-          </button>
-        </article>
+        {searchedData && searchedData.totalPages > 1 && (
+          <article>
+            <button
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={!hasPrevPage}
+            >
+              Prev
+            </button>
+            <span>
+              {page} of {searchedData.totalPages}
+            </span>
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={!hasNextPage}
+            >
+              Next
+            </button>
+          </article>
+        )}
       </main>
     </div>
   );

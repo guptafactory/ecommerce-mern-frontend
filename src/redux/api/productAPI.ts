@@ -3,7 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import {
   AllProductsResponse,
+  CategoriesResponse,
   LatestProductsResponse,
+  SearchProductsRequest,
+  SearchProductsResponse,
 } from "../../types/api-types";
 
 const server = import.meta.env.VITE_SERVER;
@@ -20,14 +23,30 @@ export const productAPI = createApi({
     allProducts: builder.query<AllProductsResponse, string>({
       query: (id) => `admin-products?id=${id}`,
     }),
+    categories: builder.query<CategoriesResponse, string>({
+      query: () => "categories",
+    }),
+    searchProducts: builder.query<
+      SearchProductsResponse,
+      SearchProductsRequest
+    >({
+      query: ({ search, minPrice, maxPrice, category, sort, page }) => {
+        let base = `all?search=${search}&page=${page}`;
+
+        if (minPrice) base += `&minPrice=${minPrice}`;
+        if (maxPrice) base += `&maxPrice=${maxPrice}`;
+        if (category) base += `&category=${category}`;
+        if (sort) base += `&sort=${sort}`;
+
+        return base;
+      },
+    }),
   }),
 });
 
-// export const getUser = async (id: string) => {
-//   const { data }: { data: UserResponse } = await axios.get(
-//     `${server}/api/v1/user/${id}?id=1`
-//   );
-//   return data;
-// };
-
-export const { useLatestProductsQuery, useAllProductsQuery } = productAPI;
+export const {
+  useLatestProductsQuery,
+  useAllProductsQuery,
+  useCategoriesQuery,
+  useSearchProductsQuery,
+} = productAPI;

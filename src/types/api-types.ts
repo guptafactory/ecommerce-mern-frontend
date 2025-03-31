@@ -1,32 +1,43 @@
 import { Product, User } from "./types";
 
-export interface MessageResponse {
+export type MessageResponse = {
   sucess: boolean;
   message: string;
-}
+};
 
-export interface UserResponse {
-  success: boolean;
-  message: string;
+export type UserResponse = MessageResponse & {
   user: User;
-}
+};
 
-export interface LatestProductsResponse {
-  success: boolean;
-  message: string;
+export type LatestProductsResponse = MessageResponse & {
   products: Product[];
-}
+};
 
-export interface AllProductsResponse {
-  success: boolean;
-  message: string;
+export type AllProductsResponse = MessageResponse & {
   products: Product[];
-}
+};
 
-export interface CustomError {
+export type CategoriesResponse = MessageResponse & {
+  categories: string[];
+};
+
+export type SearchProductsResponse = AllProductsResponse & {
+  totalPages: number;
+};
+
+export type SearchProductsRequest = {
+  search?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  category?: string;
+  sort?: string;
+  page?: string;
+};
+
+export type CustomError = {
   status: number;
   data: {
     message: string;
     success: boolean;
   };
-}
+};
