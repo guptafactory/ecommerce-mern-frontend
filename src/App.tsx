@@ -17,18 +17,18 @@ const Dashboard = lazy(() => import("./pages/admin/dashboard"));
 const Products = lazy(() => import("./pages/admin/products"));
 const Customers = lazy(() => import("./pages/admin/customers"));
 const Transaction = lazy(() => import("./pages/admin/transaction"));
-const Barcharts = lazy(() => import("./pages/admin/charts/barcharts"));
-const Piecharts = lazy(() => import("./pages/admin/charts/piecharts"));
-const Linecharts = lazy(() => import("./pages/admin/charts/linecharts"));
+const Barcharts = lazy(() => import("./pages/admin/charts/bar-charts"));
+const Piecharts = lazy(() => import("./pages/admin/charts/pie-charts"));
+const Linecharts = lazy(() => import("./pages/admin/charts/line-charts"));
 const Coupon = lazy(() => import("./pages/admin/apps/coupon"));
 const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
 const Toss = lazy(() => import("./pages/admin/apps/toss"));
-const NewProduct = lazy(() => import("./pages/admin/management/newproduct"));
+const NewProduct = lazy(() => import("./pages/admin/management/new-product"));
 const ProductManagement = lazy(
-  () => import("./pages/admin/management/productmanagement")
+  () => import("./pages/admin/management/product-management")
 );
 const TransactionManagement = lazy(
-  () => import("./pages/admin/management/transactionmanagement")
+  () => import("./pages/admin/management/transaction-management")
 );
 
 // Components
