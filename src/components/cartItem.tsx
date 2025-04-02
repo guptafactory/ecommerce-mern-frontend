@@ -1,6 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
 
 interface CartItemProps {
   item: {

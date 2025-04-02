@@ -1,8 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { GoogleAuthProvider } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
+import { GoogleAuthProvider } from "firebase/auth";
 import { signInWithPopup } from "firebase/auth";
+
 import { auth } from "../firebase.js";
 import { useLoginMutation } from "../redux/api/userAPI.js";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";

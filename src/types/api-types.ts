@@ -1,7 +1,7 @@
 import { Product, User } from "./types";
 
 export type MessageResponse = {
-  sucess: boolean;
+  success: boolean;
   message: string;
 };
 
@@ -21,10 +21,6 @@ export type CategoriesResponse = MessageResponse & {
   categories: string[];
 };
 
-export type SearchProductsResponse = AllProductsResponse & {
-  totalPages: number;
-};
-
 export type SearchProductsRequest = {
   search?: string;
   minPrice?: string;
@@ -32,6 +28,22 @@ export type SearchProductsRequest = {
   category?: string;
   sort?: string;
   page?: string;
+};
+
+export type SearchProductsResponse = AllProductsResponse & {
+  totalPages: number;
+};
+
+export type CreateProductRequest = {
+  id: string;
+  formData: FormData;
+};
+
+export type CreateProductResponse = MessageResponse & {
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
 };
 
 export type CustomError = {

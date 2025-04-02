@@ -20,8 +20,8 @@ function Search() {
 
   const [search, setSearch] = useState<string>("");
   const [sort, setSort] = useState<string>("");
-  const [minPrice, setMinPrice] = useState<number>(100);
-  const [maxPrice, setMaxPrice] = useState<number>(10000);
+  const [minPrice, setMinPrice] = useState<number>(1000);
+  const [maxPrice, setMaxPrice] = useState<number>(200000);
   const [category, setCategory] = useState<string>("");
   const [page, setPage] = useState<number>(1);
 
@@ -89,7 +89,7 @@ function Search() {
           <input
             type="range"
             min={100}
-            max={100000}
+            max={500000}
             value={minPrice}
             onChange={(e) => handleMinPrice(e)}
           />
@@ -100,7 +100,7 @@ function Search() {
           <input
             type="range"
             min={100}
-            max={100000}
+            max={500000}
             value={maxPrice}
             onChange={(e) => handleMaxPrice(e)}
           />

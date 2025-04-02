@@ -7,11 +7,11 @@ import {
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
-
-import { User } from "../types/types";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
 import toast from "react-hot-toast";
+
+import { auth } from "../firebase";
+import { User } from "../types/types";
 
 interface PropsType {
   user: User | null;

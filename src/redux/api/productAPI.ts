@@ -5,8 +5,10 @@ import {
   AllProductsResponse,
   CategoriesResponse,
   LatestProductsResponse,
+  CreateProductResponse,
   SearchProductsRequest,
   SearchProductsResponse,
+  CreateProductRequest,
 } from "../../types/api-types";
 
 const server = import.meta.env.VITE_SERVER;
@@ -16,15 +18,23 @@ export const productAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/product/`,
   }),
+  tagTypes: ["Products"],
+  // keepUnusedDataFor: 0,
+  // refetchOnFocus: true,
+  // refetchOnReconnect: true,
+  // refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     latestProducts: builder.query<LatestProductsResponse, string>({
       query: () => "latest",
+      providesTags: ["Products"],
     }),
     allProducts: builder.query<AllProductsResponse, string>({
       query: (id) => `admin-products?id=${id}`,
+      providesTags: ["Products"],
     }),
     categories: builder.query<CategoriesResponse, string>({
       query: () => "categories",
+      providesTags: ["Products"],
     }),
     searchProducts: builder.query<
       SearchProductsResponse,
@@ -40,6 +50,18 @@ export const productAPI = createApi({
 
         return base;
       },
+      providesTags: ["Products"],
+    }),
+    createProduct: builder.mutation<
+      CreateProductResponse,
+      CreateProductRequest
+    >({
+      query: ({ id, formData }) => ({
+        url: `new?id=${id}`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Products"],
     }),
   }),
 });
@@ -49,4 +71,5 @@ export const {
   useAllProductsQuery,
   useCategoriesQuery,
   useSearchProductsQuery,
+  useCreateProductMutation,
 } = productAPI;

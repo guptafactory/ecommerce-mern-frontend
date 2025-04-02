@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import ProductCard from "../components/productCard";
-import { useLatestProductsQuery } from "../redux/api/productAPI";
 import toast from "react-hot-toast";
+
+import { useLatestProductsQuery } from "../redux/api/productAPI";
+import ProductCard from "../components/productCard";
 import { SkeletonLoader } from "../components/loader";
 
 function Home() {
