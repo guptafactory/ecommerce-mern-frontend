@@ -9,7 +9,12 @@ import {
   SearchProductsRequest,
   SearchProductsResponse,
   CreateProductRequest,
-} from "../../types/api-types";
+  ProductDetailsResponse,
+  UpdateProductResponse,
+  UpdateProductRequest,
+  DeleteProductResponse,
+  DeleteProductRequest,
+} from "../../types/api/product";
 
 const server = import.meta.env.VITE_SERVER;
 
@@ -19,23 +24,22 @@ export const productAPI = createApi({
     baseUrl: `${server}/api/v1/product/`,
   }),
   tagTypes: ["Products"],
-  // keepUnusedDataFor: 0,
-  // refetchOnFocus: true,
-  // refetchOnReconnect: true,
-  // refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     latestProducts: builder.query<LatestProductsResponse, string>({
       query: () => "latest",
       providesTags: ["Products"],
     }),
+
     allProducts: builder.query<AllProductsResponse, string>({
       query: (id) => `admin-products?id=${id}`,
       providesTags: ["Products"],
     }),
+
     categories: builder.query<CategoriesResponse, string>({
       query: () => "categories",
       providesTags: ["Products"],
     }),
+
     searchProducts: builder.query<
       SearchProductsResponse,
       SearchProductsRequest
@@ -52,6 +56,12 @@ export const productAPI = createApi({
       },
       providesTags: ["Products"],
     }),
+
+    productDetails: builder.query<ProductDetailsResponse, string>({
+      query: (productId) => productId,
+      providesTags: ["Products"],
+    }),
+
     createProduct: builder.mutation<
       CreateProductResponse,
       CreateProductRequest
@@ -63,6 +73,29 @@ export const productAPI = createApi({
       }),
       invalidatesTags: ["Products"],
     }),
+
+    updateProduct: builder.mutation<
+      UpdateProductResponse,
+      UpdateProductRequest
+    >({
+      query: ({ userId, productId, formData }) => ({
+        url: `${productId}?id=${userId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
+    deleteProduct: builder.mutation<
+      DeleteProductResponse,
+      DeleteProductRequest
+    >({
+      query: ({ userId, productId }) => ({
+        url: `${productId}?id=${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Products"],
+    }),
   }),
 });
 
@@ -71,5 +104,9 @@ export const {
   useAllProductsQuery,
   useCategoriesQuery,
   useSearchProductsQuery,
+  useProductDetailsQuery,
+
   useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
 } = productAPI;
