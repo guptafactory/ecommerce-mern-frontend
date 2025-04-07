@@ -6,8 +6,8 @@ const initialState: CartReducerInitialState = {
   loading: false,
   cartItems: [],
   subtotal: 0,
-  tax: 0,
   shippingCharges: 0,
+  tax: 0,
   discount: 0,
   total: 0,
   shippingInfo: {
@@ -35,6 +35,7 @@ export const cartReducer = createSlice({
 
       state.loading = false;
     },
+
     removeFromCart: (state, action: PayloadAction<string>) => {
       state.loading = true;
       state.cartItems = state.cartItems.filter(
@@ -42,7 +43,38 @@ export const cartReducer = createSlice({
       );
       state.loading = false;
     },
+
+    clearCart: (state) => {
+      state.loading = true;
+      state.cartItems = [];
+      state.subtotal = 0;
+      state.shippingCharges = 0;
+      state.tax = 0;
+      state.discount = 0;
+      state.total = 0;
+      state.loading = false;
+    },
+
+    calculatePrice: (state) => {
+      state.loading = true;
+
+      state.subtotal = state.cartItems.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+      if (state.cartItems.length)
+        state.shippingCharges = state.subtotal > 1000 ? 0 : 200;
+      else state.shippingCharges = 0;
+      // assume free shipping for orders above 1000
+      state.tax = Math.round(state.subtotal * 0.18); // assume 18% tax
+      state.discount = Math.round(state.subtotal * 0.1); // assume 10% discount
+
+      state.total =
+        state.subtotal + state.shippingCharges + state.tax - state.discount;
+      state.loading = false;
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = cartReducer.actions;
+export const { addToCart, removeFromCart, clearCart, calculatePrice } =
+  cartReducer.actions;

@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import { VscError } from "react-icons/vsc";
 
-import { addToCart, removeFromCart } from "../redux/reducer/cartReducer";
+import {
+  addToCart,
+  calculatePrice,
+  removeFromCart,
+} from "../redux/reducer/cartReducer";
 import CartItemCard from "../components/cartItem";
 import { CartReducerInitialState } from "../types/reducer-types";
 import { CartItem } from "../types/types";
-import toast from "react-hot-toast";
 
 function Cart() {
   const { cartItems, subtotal, discount, tax, shippingCharges, total } =
@@ -50,6 +54,10 @@ function Cart() {
       setIsValidCode(false);
     };
   }, [couponCode]);
+
+  useEffect(() => {
+    dispatch(calculatePrice());
+  }, [cartItems, dispatch]);
 
   return (
     <div className="cart">

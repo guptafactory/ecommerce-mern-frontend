@@ -14,7 +14,10 @@ function Home() {
   const dispatch = useDispatch();
 
   const addToCartHandler = (cartItem: CartItem) => {
-    if (cartItem.stock === 0) return toast.error("Product is out of stock");
+    if (cartItem.stock === 0) {
+      toast.error("Product is out of stock");
+      return;
+    }
 
     dispatch(addToCart(cartItem));
     toast.success("Product added to cart");

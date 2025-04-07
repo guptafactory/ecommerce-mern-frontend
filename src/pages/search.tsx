@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
 import {
   useCategoriesQuery,
   useSearchProductsQuery,
 } from "../redux/api/productAPI";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 import ProductCard from "../components/productCard";
 import { SkeletonLoader } from "../components/loader";
 import { CustomError } from "../types/api-types";
+import { CartItem } from "../types/types";
 
 function Search() {
   const {
@@ -24,6 +27,7 @@ function Search() {
   const [maxPrice, setMaxPrice] = useState<number>(200000);
   const [category, setCategory] = useState<string>("");
   const [page, setPage] = useState<number>(1);
+  const dispatch = useDispatch();
 
   const {
     data: searchedData,
@@ -42,17 +46,32 @@ function Search() {
   const hasPrevPage = page > 1;
   const hasNextPage = page < (searchedData ? searchedData?.totalPages : 1);
 
-  const addToCartHandler = () => {};
+  const addToCartHandler = (cartItem: CartItem) => {
+    if (cartItem.stock === 0) {
+      toast.error("Product is out of stock");
+      return;
+    }
 
-  if (isErrorCategories) {
-    const err = errorCategories as CustomError;
-    toast.error(err.data.message);
-  }
+    dispatch(addToCart(cartItem));
+    toast.success("Product added to cart");
+  };
 
-  if (isErrorSearchedData) {
-    const err = errorSearchedData as CustomError;
-    toast.error(err.data.message);
-  }
+  useEffect(() => {
+    if (isErrorCategories) {
+      const err = errorCategories as CustomError;
+      toast.error(err.data.message);
+    }
+
+    if (isErrorSearchedData) {
+      const err = errorSearchedData as CustomError;
+      toast.error(err.data.message);
+    }
+  }, [
+    isErrorCategories,
+    isErrorSearchedData,
+    errorCategories,
+    errorSearchedData,
+  ]);
 
   const handleMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number(e.target.value) > maxPrice) {
