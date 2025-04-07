@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { VscError } from "react-icons/vsc";
 
-import CartItem from "../components/cartItem";
-
-const cartItems = [
-  {
-    productId: "abc",
-    photo: "https://m.media-amazon.com/images/I/71an9eiBxpL._SX250_.jpg",
-    name: "Macbook",
-    price: 3000,
-    quantity: 40,
-    stock: 10,
-  },
-];
-const subtotal = 4000;
-const discount = 400;
-const tax = Math.round(subtotal * 0.18);
-const shippingCharges = 200;
-const total = subtotal + tax + shippingCharges;
+import { addToCart, removeFromCart } from "../redux/reducer/cartReducer";
+import CartItemCard from "../components/cartItem";
+import { CartReducerInitialState } from "../types/reducer-types";
+import { CartItem } from "../types/types";
+import toast from "react-hot-toast";
 
 function Cart() {
+  const { cartItems, subtotal, discount, tax, shippingCharges, total } =
+    useSelector(
+      (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
+    );
+
   const [couponCode, setCouponCode] = useState<string>("");
   const [isValidCode, setIsValidCode] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  // Handler functions
+  const incrementHandler = (cartItem: CartItem) => {
+    if (cartItem.quantity === cartItem.stock) {
+      toast.error("Product stock limit reached");
+      return;
+    }
+
+    dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity + 1 }));
+  };
+
+  const decrementHandler = (cartItem: CartItem) => {
+    if (cartItem.quantity === 1) return;
+
+    dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity - 1 }));
+  };
+
+  const removeHandler = (productId: string) => {
+    dispatch(removeFromCart(productId));
+  };
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -40,7 +55,13 @@ function Cart() {
     <div className="cart">
       <main>
         {cartItems.map((item, idx) => (
-          <CartItem item={item} key={idx} />
+          <CartItemCard
+            item={item}
+            key={idx}
+            incrementHandler={incrementHandler}
+            decrementHandler={decrementHandler}
+            removeHandler={removeHandler}
+          />
         ))}
       </main>
       <aside>

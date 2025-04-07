@@ -133,7 +133,7 @@ function Search() {
         />
 
         {isLoadingSearchedData ? (
-          <SkeletonLoader width="5" />
+          <SkeletonLoader count={5} />
         ) : (
           <div className="search-product-list">
             {searchedData?.products.map((prod) => (

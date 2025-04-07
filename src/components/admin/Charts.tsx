@@ -30,7 +30,7 @@ ChartJS.register(
 
 const months = ["January", "February", "March", "April", "May", "June", "July"];
 
-interface BarChartProps {
+type BarChartProps = {
   horizontal?: boolean;
   data_1: number[];
   data_2: number[];
@@ -39,7 +39,7 @@ interface BarChartProps {
   bgColor_1: string;
   bgColor_2: string;
   labels?: string[];
-}
+};
 
 export const BarChart = ({
   data_1 = [],
@@ -103,14 +103,14 @@ export const BarChart = ({
   return <Bar width={horizontal ? "200%" : ""} options={options} data={data} />;
 };
 
-interface DoughnutChartProps {
+type DoughnutChartProps = {
   labels: string[];
   data: number[];
   backgroundColor: string[];
   cutout?: number | string;
   legends?: boolean;
   offset?: number[];
-}
+};
 
 export const DoughnutChart = ({
   labels,
@@ -149,12 +149,12 @@ export const DoughnutChart = ({
   return <Doughnut data={doughnutData} options={doughnutOptions} />;
 };
 
-interface PieChartProps {
+type PieChartProps = {
   labels: string[];
   data: number[];
   backgroundColor: string[];
   offset?: number[];
-}
+};
 export const PieChart = ({
   labels,
   data,
@@ -185,13 +185,13 @@ export const PieChart = ({
   return <Pie data={pieChartData} options={pieChartOptions} />;
 };
 
-interface LineChartProps {
+type LineChartProps = {
   data: number[];
   label: string;
   backgroundColor: string;
   borderColor: string;
   labels?: string[];
-}
+};
 
 export const LineChart = ({
   data,

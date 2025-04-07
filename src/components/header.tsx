@@ -13,9 +13,9 @@ import toast from "react-hot-toast";
 import { auth } from "../firebase";
 import { User } from "../types/types";
 
-interface PropsType {
+type PropsType = {
   user: User | null;
-}
+};
 
 function Header({ user }: PropsType) {
   const [isOpen, setIsOpen] = useState<boolean>(false);

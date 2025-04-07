@@ -4,10 +4,10 @@ function Loader() {
 
 export default Loader;
 
-interface skeletonProps {
+type skeletonProps = {
   width?: string;
   count?: number;
-}
+};
 
 export const SkeletonLoader = ({
   width = "unset",

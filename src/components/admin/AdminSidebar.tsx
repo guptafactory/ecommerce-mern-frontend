@@ -158,12 +158,12 @@ const DivThree = ({ location }: { location: Location }) => (
   </div>
 );
 
-interface LiProps {
+type LiProps = {
   url: string;
   text: string;
   location: Location;
   Icon: IconType;
-}
+};
 const Li = ({ url, text, location, Icon }: LiProps) => (
   <li
     style={{

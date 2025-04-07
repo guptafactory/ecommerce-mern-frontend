@@ -5,14 +5,14 @@ import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 
-interface DataType {
+type DataType = {
   avatar: ReactElement;
   name: string;
   email: string;
   gender: string;
   role: string;
   action: ReactElement;
-}
+};
 
 const columns: Column<DataType>[] = [
   {

@@ -15,13 +15,13 @@ import { server } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import { UserReducerInitialState } from "./../../types/reducer-types";
 
-interface DataType {
+type DataType = {
   name: string;
   price: number;
   stock: number;
   photo: ReactElement;
   action: ReactElement;
-}
+};
 
 const columns: Column<DataType>[] = [
   {
@@ -56,11 +56,6 @@ const Products = () => {
   );
   const [rows, setRows] = useState<DataType[]>([]);
 
-  if (isError) {
-    const err = error as CustomError;
-    toast.error(err.data.message);
-  }
-
   useEffect(() => {
     if (data) {
       setRows(
@@ -74,7 +69,11 @@ const Products = () => {
         }))
       );
     }
-  }, [data]);
+    if (isError) {
+      const err = error as CustomError;
+      toast.error(err.data.message);
+    }
+  }, [data, isError, error]);
 
   const Table = TableHOC<DataType>(
     columns,

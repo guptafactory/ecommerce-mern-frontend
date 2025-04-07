@@ -1,13 +1,13 @@
 import { Column } from "react-table";
 import TableHOC from "./TableHOC";
 
-interface DataType {
+type DataType = {
   _id: string;
   quantity: number;
   discount: number;
   amount: number;
   status: string;
-}
+};
 
 const columns: Column<DataType>[] = [
   {

@@ -104,13 +104,13 @@ const Dashboard = () => {
   );
 };
 
-interface WidgetItemProps {
+type WidgetItemProps = {
   heading: string;
   value: number;
   percent: number;
   color: string;
   amount?: boolean;
-}
+};
 
 const WidgetItem = ({
   heading,
@@ -154,11 +154,11 @@ const WidgetItem = ({
   </article>
 );
 
-interface CategoryItemProps {
+type CategoryItemProps = {
   color: string;
   value: number;
   heading: string;
-}
+};
 
 const CategoryItem = ({ color, value, heading }: CategoryItemProps) => (
   <div className="category-item">
