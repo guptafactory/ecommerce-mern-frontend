@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,9 +7,11 @@ import { VscError } from "react-icons/vsc";
 
 import {
   addToCart,
+  applyDiscount,
   calculatePrice,
   removeFromCart,
 } from "../redux/reducer/cartReducer";
+import { server } from "../redux/store";
 import CartItemCard from "../components/cartItem";
 import { CartReducerInitialState } from "../types/reducer-types";
 import { CartItem } from "../types/types";
@@ -44,16 +47,31 @@ function Cart() {
   };
 
   useEffect(() => {
+    const { token: cancelToken, cancel } = axios.CancelToken.source();
+
     const timerId = setTimeout(() => {
-      if (Math.random() >= 0.5) setIsValidCode(true);
-      else setIsValidCode(false);
+      axios
+        .get(`${server}/api/v1/payment/discount?coupon=${couponCode}`, {
+          cancelToken,
+        })
+        .then((res) => {
+          setIsValidCode(true);
+          dispatch(applyDiscount(res.data.discount));
+          dispatch(calculatePrice());
+        })
+        .catch(() => {
+          setIsValidCode(false);
+          dispatch(applyDiscount(0));
+          dispatch(calculatePrice());
+        });
     }, 1000);
 
     return () => {
       clearTimeout(timerId);
       setIsValidCode(false);
+      cancel("Request cancelled");
     };
-  }, [couponCode]);
+  }, [couponCode, dispatch]);
 
   useEffect(() => {
     dispatch(calculatePrice());
