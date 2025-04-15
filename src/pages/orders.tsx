@@ -1,8 +1,15 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
+import toast from "react-hot-toast";
 
+import { useMyOrdersQuery } from "../redux/api/orderAPI";
 import TableHOC from "../components/admin/TableHOC";
+import { SkeletonLoader } from "../components/loader";
+
+import { UserReducerInitialState } from "../types/reducer-types";
+import { CustomError } from "../types/api-types";
 
 type DataType = {
   _id: string;
@@ -37,16 +44,44 @@ const column: Column<DataType>[] = [
 ];
 
 const Orders = () => {
-  const [rows, setRows] = useState<DataType[]>([
-    {
-      _id: "abc",
-      amount: 100,
-      quantity: 10,
-      discount: 10,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/${"abc"}`}>View</Link>,
-    },
-  ]);
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+
+  const { data, isLoading, isError, error } = useMyOrdersQuery(user?._id || "");
+
+  const [rows, setRows] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setRows(
+        data.orders.map((order) => ({
+          _id: order._id,
+          amount: order.total,
+          discount: order.discount,
+          status: (
+            <span
+              className={
+                order.status === "Processing"
+                  ? "red"
+                  : order.status === "Shipped"
+                  ? "green"
+                  : "purple"
+              }
+            >
+              {order.status}
+            </span>
+          ),
+          quantity: order.orderItems.length,
+          action: <Link to={`/order/${order._id}`}>View</Link>,
+        }))
+      );
+    }
+    if (isError) {
+      const err = error as CustomError;
+      toast.error(err.data.message);
+    }
+  }, [data, isError, error]);
 
   const Table = TableHOC<DataType>(
     column,
@@ -58,7 +93,7 @@ const Orders = () => {
   return (
     <div className="container">
       <h1>My Orders</h1>
-      {Table}
+      {isLoading && rows ? <SkeletonLoader count={20} /> : Table}
     </div>
   );
 };

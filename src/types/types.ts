@@ -17,6 +17,17 @@ export type Product = {
   photo: string;
 };
 
+export type CartItem = {
+  productId: string;
+  photo: string;
+  name: string;
+  price: number;
+  quantity: number;
+  stock: number;
+};
+
+export type OrderItem = Omit<CartItem, "stock"> & { _id: string };
+
 export type ShippingInfo = {
   address: string;
   city: string;
@@ -25,11 +36,18 @@ export type ShippingInfo = {
   pinCode: string;
 };
 
-export type CartItem = {
-  productId: string;
-  photo: string;
-  name: string;
-  price: number;
-  quantity: number;
-  stock: number;
+export type Order = {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+  };
+  subtotal: number;
+  tax: number;
+  shippingCharges: number;
+  discount: number;
+  total: number;
+  status: string;
+  orderItems: OrderItem[];
+  shippingInfo: ShippingInfo;
 };
