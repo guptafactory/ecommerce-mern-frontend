@@ -11,9 +11,8 @@ import {
   useProductDetailsQuery,
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
-import { server } from "../../../redux/store";
+import { RootState, server } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
-import { UserReducerInitialState } from "../../../types/reducer-types";
 
 const defaultProduct = {
   name: "",
@@ -24,9 +23,7 @@ const defaultProduct = {
 };
 
 const ProductManagement = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;

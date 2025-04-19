@@ -1,18 +1,18 @@
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { server } from "../../../redux/store";
-import { Order, OrderItem } from "../../../types/types";
-import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../../types/reducer-types";
+import { SkeletonLoader } from "../../../components/loader";
+
+import { RootState, server } from "../../../redux/store";
 import {
   useDeleteOrderMutation,
   useOrderDetailsQuery,
   useUpdateOrderMutation,
 } from "../../../redux/api/orderAPI";
-import { SkeletonLoader } from "../../../components/loader";
 import { responseToast } from "../../../utils/features";
+import { Order, OrderItem } from "../../../types/types";
 
 const defaultOrder: Order = {
   _id: "",
@@ -37,9 +37,7 @@ const defaultOrder: Order = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
 
   const navigate = useNavigate();
   const params = useParams();

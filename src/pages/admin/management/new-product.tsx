@@ -7,12 +7,10 @@ import { useCreateProductMutation } from "../../../redux/api/productAPI";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 
 import { responseToast } from "../../../utils/features";
-import { UserReducerInitialState } from "../../../types/reducer-types";
+import { RootState } from "../../../redux/store";
 
 const NewProduct = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
 
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");

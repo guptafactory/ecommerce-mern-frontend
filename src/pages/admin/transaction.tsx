@@ -9,8 +9,8 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { SkeletonLoader } from "../../components/loader";
 
-import { UserReducerInitialState } from "../../types/reducer-types";
 import { CustomError } from "../../types/api-types";
+import { RootState } from "../../redux/store";
 
 type DataType = {
   user: string;
@@ -49,9 +49,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Transaction = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
 
   const { data, isLoading, isError, error } = useAllOrdersQuery(
     user?._id || ""

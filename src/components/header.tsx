@@ -25,7 +25,7 @@ function Header({ user }: PropsType) {
       await signOut(auth);
       toast.success("Logged out successfully");
       setIsOpen(false);
-    } catch (error) {
+    } catch {
       toast.error("Logged out failed");
     }
   };

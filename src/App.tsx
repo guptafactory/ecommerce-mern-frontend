@@ -11,6 +11,7 @@ const Shipping = lazy(() => import("./pages/shipping"));
 const Login = lazy(() => import("./pages/login"));
 const Orders = lazy(() => import("./pages/orders"));
 const OrderDetails = lazy(() => import("./pages/order-details"));
+const Checkout = lazy(() => import("./pages/checkout"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
 // Admin routes
@@ -40,11 +41,11 @@ import ProtectedRoute from "./components/protectedRoute";
 import { auth } from "./firebase";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { getUser } from "./redux/api/userAPI";
-import { UserReducerInitialState } from "./types/reducer-types";
+import { RootState } from "./redux/store";
 
 function App() {
   const { user, loading } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+    (state: RootState) => state.userReducer
   );
   const dispatch = useDispatch();
 
@@ -89,6 +90,7 @@ function App() {
             <Route path="/shipping" element={<Shipping />}></Route>
             <Route path="/orders" element={<Orders />}></Route>
             <Route path="/order/:id" element={<OrderDetails />}></Route>
+            <Route path="/pay" element={<Checkout />}></Route>
           </Route>
 
           {/* Admin Routes */}

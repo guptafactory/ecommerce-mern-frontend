@@ -1,14 +1,20 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import axios from "axios";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { BiArrowBack } from "react-icons/bi";
 
-import { CartReducerInitialState } from "../types/reducer-types";
+import { RootState, server } from "../redux/store";
+import { saveShippingInfo } from "../redux/reducer/cartReducer";
 
 const Shipping = () => {
-  const { cartItems } = useSelector(
-    (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
+  const { cartItems, total } = useSelector(
+    (state: RootState) => state.cartReducer
   );
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
@@ -17,12 +23,38 @@ const Shipping = () => {
     country: "",
     pinCode: "",
   });
-  const navigate = useNavigate();
 
   const changeHandler = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setShippingInfo({ ...shippingInfo, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch(saveShippingInfo(shippingInfo));
+
+    try {
+      const { data: keyData } = await axios.get(
+        `${server}/api/v1/payment/getKey`
+      );
+      const { key } = keyData;
+
+      const { data: orderData } = await axios.post(
+        `${server}/api/v1/payment/create`,
+        {
+          amount: total,
+        }
+      );
+      const { order } = orderData;
+
+      navigate("/pay", {
+        state: { key, razorpayOrder: order },
+      });
+    } catch {
+      toast.error("Razorpay intent not created");
+    }
   };
 
   useEffect(() => {
@@ -35,7 +67,7 @@ const Shipping = () => {
         <BiArrowBack />
       </button>
 
-      <form action="">
+      <form onSubmit={submitHandler}>
         <h1>Shipping Address</h1>
 
         <input

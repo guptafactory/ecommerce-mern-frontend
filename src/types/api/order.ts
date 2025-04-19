@@ -10,14 +10,13 @@ export type OrderDetailsResponse = MessageResponse & {
 };
 
 export type NewOrderRequest = {
-  shippingInfo: ShippingInfo[];
+  shippingInfo: ShippingInfo;
   user: string;
   subtotal: number;
   tax: number;
   shippingCharges: number;
   discount: number;
   total: number;
-  status: string;
   orderItems: CartItem[];
 };
 
