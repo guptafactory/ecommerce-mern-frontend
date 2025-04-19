@@ -7,10 +7,10 @@ import { useCreateProductMutation } from "../../../redux/api/productAPI";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 
 import { responseToast } from "../../../utils/features";
-import { RootState } from "../../../redux/store";
+import { StoreRootState } from "../../../redux/store";
 
 const NewProduct = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("");
@@ -57,7 +57,7 @@ const NewProduct = () => {
 
     const res = await newProduct({ id: user._id, formData });
 
-    responseToast(res, navigate, "/admin/product");
+    responseToast(res, navigate, "/admin/products");
   };
 
   return (

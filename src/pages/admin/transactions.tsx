@@ -10,7 +10,7 @@ import TableHOC from "../../components/admin/TableHOC";
 import { SkeletonLoader } from "../../components/loader";
 
 import { CustomError } from "../../types/api-types";
-import { RootState } from "../../redux/store";
+import { StoreRootState } from "../../redux/store";
 
 type DataType = {
   user: string;
@@ -48,8 +48,8 @@ const columns: Column<DataType>[] = [
   },
 ];
 
-const Transaction = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+const Transactions = () => {
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError, error } = useAllOrdersQuery(
     user?._id || ""
@@ -103,4 +103,4 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default Transactions;

@@ -11,13 +11,13 @@ import {
   calculatePrice,
   removeFromCart,
 } from "../redux/reducer/cartReducer";
-import { RootState, server } from "../redux/store";
+import { StoreRootState, server } from "../redux/store";
 import CartItemCard from "../components/cartItem";
 import { CartItem } from "../types/types";
 
 function Cart() {
   const { cartItems, subtotal, discount, tax, shippingCharges, total } =
-    useSelector((state: RootState) => state.cartReducer);
+    useSelector((state: StoreRootState) => state.cartReducer);
 
   const [couponCode, setCouponCode] = useState<string>("");
   const [isValidCode, setIsValidCode] = useState<boolean>(false);

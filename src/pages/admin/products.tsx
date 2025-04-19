@@ -10,7 +10,7 @@ import TableHOC from "../../components/admin/TableHOC";
 import { SkeletonLoader } from "../../components/loader";
 
 import { useAllProductsQuery } from "../../redux/api/productAPI";
-import { RootState, server } from "../../redux/store";
+import { StoreRootState, server } from "../../redux/store";
 
 import { CustomError } from "../../types/api-types";
 
@@ -46,7 +46,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Products = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isError, error, isLoading } = useAllProductsQuery(
     user?._id || ""

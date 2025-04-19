@@ -18,7 +18,7 @@ const NotFound = lazy(() => import("./pages/not-found"));
 const Dashboard = lazy(() => import("./pages/admin/dashboard"));
 const Products = lazy(() => import("./pages/admin/products"));
 const Customers = lazy(() => import("./pages/admin/customers"));
-const Transaction = lazy(() => import("./pages/admin/transaction"));
+const Transactions = lazy(() => import("./pages/admin/transactions"));
 const Barcharts = lazy(() => import("./pages/admin/charts/bar-charts"));
 const Piecharts = lazy(() => import("./pages/admin/charts/pie-charts"));
 const Linecharts = lazy(() => import("./pages/admin/charts/line-charts"));
@@ -41,11 +41,11 @@ import ProtectedRoute from "./components/protectedRoute";
 import { auth } from "./firebase";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { getUser } from "./redux/api/userAPI";
-import { RootState } from "./redux/store";
+import { StoreRootState } from "./redux/store";
 
 function App() {
   const { user, loading } = useSelector(
-    (state: RootState) => state.userReducer
+    (state: StoreRootState) => state.userReducer
   );
   const dispatch = useDispatch();
 
@@ -104,14 +104,14 @@ function App() {
             }
           >
             <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/product" element={<Products />} />
-            <Route path="/admin/customer" element={<Customers />} />
-            <Route path="/admin/transaction" element={<Transaction />} />
+            <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/customers" element={<Customers />} />
+            <Route path="/admin/transactions" element={<Transactions />} />
 
             {/* Charts */}
-            <Route path="/admin/chart/bar" element={<Barcharts />} />
-            <Route path="/admin/chart/pie" element={<Piecharts />} />
-            <Route path="/admin/chart/line" element={<Linecharts />} />
+            <Route path="/admin/charts/bar" element={<Barcharts />} />
+            <Route path="/admin/charts/pie" element={<Piecharts />} />
+            <Route path="/admin/charts/line" element={<Linecharts />} />
 
             {/* Apps */}
             <Route path="/admin/app/coupon" element={<Coupon />} />

@@ -5,7 +5,7 @@ import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { SkeletonLoader } from "../../../components/loader";
 
-import { RootState, server } from "../../../redux/store";
+import { StoreRootState, server } from "../../../redux/store";
 import {
   useDeleteOrderMutation,
   useOrderDetailsQuery,
@@ -37,7 +37,7 @@ const defaultOrder: Order = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -66,7 +66,7 @@ const TransactionManagement = () => {
       userId: user?._id || "",
       orderId: _id,
     });
-    responseToast(res, navigate, "/admin/transaction");
+    responseToast(res, navigate, "/admin/transactions");
   };
 
   const deleteHandler = async (): Promise<void> => {
@@ -74,7 +74,7 @@ const TransactionManagement = () => {
       userId: user?._id || "",
       orderId: _id,
     });
-    responseToast(res, navigate, "/admin/transaction");
+    responseToast(res, navigate, "/admin/transactions");
   };
 
   if (isError) return <Navigate to={"/404"} />;

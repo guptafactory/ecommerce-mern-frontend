@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 import { useCreateOrderMutation } from "../redux/api/orderAPI";
 import { resetCart } from "../redux/reducer/cartReducer";
-import { RootState, server } from "../redux/store";
+import { StoreRootState, server } from "../redux/store";
 import { NewOrderRequest } from "../types/api/order";
 import { responseToast } from "../utils/features";
 
@@ -14,7 +14,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
   const {
     shippingInfo,
     cartItems,
@@ -23,7 +23,7 @@ const Checkout = () => {
     discount,
     shippingCharges,
     total,
-  } = useSelector((state: RootState) => state.cartReducer);
+  } = useSelector((state: StoreRootState) => state.cartReducer);
 
   const orderData = useMemo<NewOrderRequest>(
     () => ({

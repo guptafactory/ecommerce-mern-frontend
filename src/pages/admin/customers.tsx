@@ -4,6 +4,8 @@ import { Column } from "react-table";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import { useSelector } from "react-redux";
+import { StoreRootState } from "../../redux/store";
 
 type DataType = {
   avatar: ReactElement;
@@ -89,6 +91,8 @@ const arr: Array<DataType> = [
 ];
 
 const Customers = () => {
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
+
   const [rows, setRows] = useState<DataType[]>(arr);
 
   const Table = TableHOC<DataType>(

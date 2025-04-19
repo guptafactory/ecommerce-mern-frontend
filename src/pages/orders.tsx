@@ -8,7 +8,7 @@ import { useMyOrdersQuery } from "../redux/api/orderAPI";
 import TableHOC from "../components/admin/TableHOC";
 import { SkeletonLoader } from "../components/loader";
 
-import { RootState } from "../redux/store";
+import { StoreRootState } from "../redux/store";
 import { CustomError } from "../types/api-types";
 
 type DataType = {
@@ -44,7 +44,7 @@ const column: Column<DataType>[] = [
 ];
 
 const Orders = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError, error } = useMyOrdersQuery(user?._id || "");
 

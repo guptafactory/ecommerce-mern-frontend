@@ -11,7 +11,7 @@ import {
   useProductDetailsQuery,
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
-import { RootState, server } from "../../../redux/store";
+import { StoreRootState, server } from "../../../redux/store";
 import { responseToast } from "../../../utils/features";
 
 const defaultProduct = {
@@ -23,7 +23,7 @@ const defaultProduct = {
 };
 
 const ProductManagement = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  const { user } = useSelector((state: StoreRootState) => state.userReducer);
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
@@ -80,7 +80,7 @@ const ProductManagement = () => {
       formData,
     });
 
-    responseToast(res, navigate, "/admin/product");
+    responseToast(res, navigate, "/admin/products");
   };
 
   const deleteHandler = async (): Promise<void> => {
@@ -91,7 +91,7 @@ const ProductManagement = () => {
       productId: id || "",
     });
 
-    responseToast(res, navigate, "/admin/product");
+    responseToast(res, navigate, "/admin/products");
   };
 
   useEffect(() => {

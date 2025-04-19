@@ -85,20 +85,20 @@ const DivOne = ({ location }: { location: Location }) => (
         location={location}
       />
       <Li
-        url="/admin/product"
-        text="Product"
+        url="/admin/products"
+        text="Products"
         Icon={RiShoppingBag3Fill}
         location={location}
       />
       <Li
-        url="/admin/customer"
-        text="Customer"
+        url="/admin/customers"
+        text="Customers"
         Icon={IoIosPeople}
         location={location}
       />
       <Li
-        url="/admin/transaction"
-        text="Transaction"
+        url="/admin/transactions"
+        text="Transactions"
         Icon={AiFillFileText}
         location={location}
       />
@@ -111,19 +111,19 @@ const DivTwo = ({ location }: { location: Location }) => (
     <h5>Charts</h5>
     <ul>
       <Li
-        url="/admin/chart/bar"
+        url="/admin/charts/bar"
         text="Bar"
         Icon={FaChartBar}
         location={location}
       />
       <Li
-        url="/admin/chart/pie"
+        url="/admin/charts/pie"
         text="Pie"
         Icon={FaChartPie}
         location={location}
       />
       <Li
-        url="/admin/chart/line"
+        url="/admin/charts/line"
         text="Line"
         Icon={FaChartLine}
         location={location}
