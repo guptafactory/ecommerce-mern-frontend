@@ -22,6 +22,18 @@ const NewProduct = () => {
   const [newProduct] = useCreateProductMutation();
   const navigate = useNavigate();
 
+  const priceHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (value < 1) setPrice(1);
+    else setPrice(value);
+  };
+
+  const stockHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    if (value < 0) setStock(0);
+    else setStock(value);
+  };
+
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
 
@@ -41,7 +53,7 @@ const NewProduct = () => {
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !category || !price || stock < 0 || !photo) {
+    if (!name || !category || price <= 0 || stock < 0 || !photo) {
       toast.error("Please fill all fields");
       return;
     }
@@ -85,7 +97,7 @@ const NewProduct = () => {
                 placeholder="Price"
                 required
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={priceHandler}
               />
             </div>
 
@@ -96,7 +108,7 @@ const NewProduct = () => {
                 placeholder="Stock"
                 required
                 value={stock}
-                onChange={(e) => setStock(Number(e.target.value))}
+                onChange={stockHandler}
               />
             </div>
 

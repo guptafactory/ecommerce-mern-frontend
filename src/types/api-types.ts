@@ -3,10 +3,6 @@ export type MessageResponse = {
   message: string;
 };
 
-export type CreatePaymentResponse = MessageResponse & {
-  // order: RazorpayOrder;
-};
-
 export type CustomError = {
   status: number;
   data: {
