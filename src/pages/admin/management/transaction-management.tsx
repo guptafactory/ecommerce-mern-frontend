@@ -114,8 +114,8 @@ const TransactionManagement = () => {
               <h5>User Info</h5>
               <p>Name: {name}</p>
               <p>
-                Address:{" "}
-                {`${address}, ${city}, ${state}, ${country} ${pinCode}`}
+                Address:
+                {` ${address}, ${city}, ${state}, ${country} ${pinCode}`}
               </p>
               <h5>Amount Info</h5>
               <p>Subtotal: {subtotal}</p>
@@ -126,7 +126,7 @@ const TransactionManagement = () => {
 
               <h5>Status Info</h5>
               <p>
-                Status:{" "}
+                Status:
                 <span
                   className={
                     status === "Delivered"

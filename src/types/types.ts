@@ -51,3 +51,84 @@ export type Order = {
   orderItems: OrderItem[];
   shippingInfo: ShippingInfo;
 };
+
+// Dashboard types
+
+type FixedLengthArray<
+  T,
+  L extends number,
+  R extends unknown[] = []
+> = R["length"] extends L ? R : FixedLengthArray<T, L, [T, ...R]>;
+
+export type Stats = {
+  categoryCount: Array<Record<string, number>>;
+  changePercent: {
+    revenue: number;
+    product: number;
+    user: number;
+    order: number;
+  };
+  count: {
+    totalRevenue: number;
+    product: number;
+    user: number;
+    order: number;
+  };
+  chart: {
+    order: number[];
+    revenue: number[];
+  };
+  userRatio: {
+    male: number;
+    female: number;
+  };
+  latestTransactions: Array<{
+    _id: string;
+    discount: number;
+    amount: number;
+    quantity: number;
+    status: "Processing" | "Shipped" | "Delivered";
+  }>;
+};
+
+export type BarChart = {
+  users: FixedLengthArray<number, 6>;
+  products: FixedLengthArray<number, 6>;
+  orders: FixedLengthArray<number, 12>;
+};
+
+export type PieChart = {
+  orderFulfillment: {
+    processing: number;
+    shipped: number;
+    delivered: number;
+  };
+  productCategories: Array<Record<string, number>>;
+  stockAvailability: {
+    inStock: number;
+    outOfStock: number;
+  };
+  revenueDistribution: {
+    productionCost: number;
+    marketingCost: number;
+    discount: number;
+    burn: number;
+    netMargin: number;
+  };
+  adminCustomer: {
+    admin: number;
+    customer: number;
+  };
+  usersAgeGroup: {
+    teen: number;
+    adult: number;
+    old: number;
+  };
+};
+
+export type LineChart = {
+  users: FixedLengthArray<number, 12>;
+  products: FixedLengthArray<number, 12>;
+  discount: FixedLengthArray<number, 12>;
+  revenue: FixedLengthArray<number, 12>;
+};

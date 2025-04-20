@@ -58,7 +58,6 @@ function App() {
         dispatch(userNotExist());
       }
     });
-    return () => {};
   }, [dispatch]);
 
   return loading ? (
