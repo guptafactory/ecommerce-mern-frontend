@@ -21,7 +21,7 @@ export const userAPI = createApi({
       providesTags: ["Users"],
     }),
 
-    login: builder.mutation<MessageResponse, User>({
+    login: builder.mutation<UserResponse, User>({
       query: (user) => ({
         url: "new",
         method: "POST",
