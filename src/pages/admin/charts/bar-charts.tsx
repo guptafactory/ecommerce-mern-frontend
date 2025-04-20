@@ -16,7 +16,8 @@ const Barcharts = () => {
 
   const charts = data?.charts;
 
-  if (isError || !charts) return <Navigate to={"/admin/dashboard"} />;
+  if (isError) return <Navigate to={"/admin/dashboard"} />;
+  if (!charts) return <div>No chart data available.</div>;
 
   const { users, products, orders } = charts;
   const last12months = getLastMonths({

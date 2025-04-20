@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 import {
   BarChartResponse,
   LineChartResponse,
@@ -13,23 +14,22 @@ export const dashboardAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/dashboard/`,
   }),
-  tagTypes: ["Dashboard"],
   endpoints: (builder) => ({
     stats: builder.query<StatsResponse, string>({
       query: (id) => `stats?id=${id}`,
-      providesTags: ["Dashboard"],
+      keepUnusedDataFor: 0,
     }),
     barChart: builder.query<BarChartResponse, string>({
       query: (id) => `bar?id=${id}`,
-      providesTags: ["Dashboard"],
+      keepUnusedDataFor: 0,
     }),
     pieChart: builder.query<PieChartResponse, string>({
       query: (id) => `pie?id=${id}`,
-      providesTags: ["Dashboard"],
+      keepUnusedDataFor: 0,
     }),
     lineChart: builder.query<LineChartResponse, string>({
       query: (id) => `line?id=${id}`,
-      providesTags: ["Dashboard"],
+      keepUnusedDataFor: 0,
     }),
   }),
 });

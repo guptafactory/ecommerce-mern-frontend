@@ -15,7 +15,8 @@ const PieCharts = () => {
 
   const charts = data?.charts;
 
-  if (isError || !charts) return <Navigate to={"/admin/dashboard"} />;
+  if (isError) return <Navigate to={"/admin/dashboard"} />;
+  if (!charts) return <div>No chart data available.</div>;
 
   const {
     orderFulfillment,
@@ -25,8 +26,6 @@ const PieCharts = () => {
     usersAgeGroup,
     adminCustomer,
   } = charts;
-
-  // const productCategories2 = categories;
 
   return (
     <div className="admin-container">

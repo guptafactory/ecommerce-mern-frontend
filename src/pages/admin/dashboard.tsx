@@ -22,7 +22,8 @@ const Dashboard = () => {
   const { data, isLoading, isError } = useStatsQuery(user?._id || "");
   const stats = data?.stats;
 
-  if (isError || !stats) return <Navigate to={"/"} />;
+  if (isError) return <Navigate to={"/"} />;
+  if (!stats) return <div>No stats data available.</div>;
 
   return (
     <div className="admin-container">
