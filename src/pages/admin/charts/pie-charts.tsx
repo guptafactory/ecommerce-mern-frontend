@@ -8,15 +8,43 @@ import { SkeletonLoader } from "../../../components/loader";
 import { usePieChartQuery } from "../../../redux/api/dashboardAPI";
 import { StoreRootState } from "../../../redux/store";
 
+const defaultPieChart = {
+  orderFulfillment: {
+    processing: 0,
+    shipped: 0,
+    delivered: 0,
+  },
+  productCategories: [],
+  stockAvailability: {
+    inStock: 0,
+    outOfStock: 0,
+  },
+  revenueDistribution: {
+    productionCost: 0,
+    marketingCost: 0,
+    discount: 0,
+    burn: 0,
+    netMargin: 0,
+  },
+  adminCustomer: {
+    admin: 0,
+    customer: 0,
+  },
+  usersAgeGroup: {
+    teen: 0,
+    adult: 0,
+    old: 0,
+  },
+};
+
 const PieCharts = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError } = usePieChartQuery(user?._id || "");
 
-  const charts = data?.charts;
-
   if (isError) return <Navigate to={"/admin/dashboard"} />;
-  if (!charts) return <div>No chart data available.</div>;
+
+  const charts = data?.charts || defaultPieChart;
 
   const {
     orderFulfillment,

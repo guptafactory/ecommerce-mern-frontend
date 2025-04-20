@@ -10,15 +10,21 @@ import { useLineChartQuery } from "../../../redux/api/dashboardAPI";
 
 import { getLastMonths } from "../../../utils/features";
 
+const defaultLineChart = {
+  users: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  products: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  discounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  revenues: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+};
+
 const Linecharts = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError } = useLineChartQuery(user?._id || "");
 
-  const charts = data?.charts;
-
   if (isError) return <Navigate to={"/admin/dashboard"} />;
-  if (!charts) return <div>No chart data available.</div>;
+
+  const charts = data?.charts || defaultLineChart;
 
   const last12months = getLastMonths({
     count: 12,

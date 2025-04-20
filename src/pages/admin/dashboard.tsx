@@ -12,18 +12,48 @@ import { SkeletonLoader } from "../../components/loader";
 
 import { StoreRootState } from "../../redux/store";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
+import { getLastMonths } from "../../utils/features";
 
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
+
+const defaultStats = {
+  categoryCount: [],
+  changePercent: {
+    revenue: 0,
+    product: 0,
+    user: 0,
+    order: 0,
+  },
+  count: {
+    totalRevenue: 0,
+    product: 0,
+    user: 0,
+    order: 0,
+  },
+  chart: {
+    order: [0, 0, 0, 0, 0, 0],
+    revenue: [0, 0, 0, 0, 0, 0],
+  },
+  userRatio: {
+    male: 0,
+    female: 0,
+  },
+  latestTransactions: [],
+};
 
 const Dashboard = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError } = useStatsQuery(user?._id || "");
-  const stats = data?.stats;
 
   if (isError) return <Navigate to={"/"} />;
-  if (!stats) return <div>No stats data available.</div>;
+  const stats = data?.stats || defaultStats;
+
+  const last6months = getLastMonths({
+    count: 6,
+    reverse: true,
+  });
 
   return (
     <div className="admin-container">
@@ -81,6 +111,7 @@ const Dashboard = () => {
                   title_2="Transaction"
                   bgColor_1="rgb(0, 115, 255)"
                   bgColor_2="rgba(53, 162, 235, 0.8)"
+                  labels={last6months}
                 />
               </div>
 

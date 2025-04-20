@@ -9,15 +9,20 @@ import { StoreRootState } from "../../../redux/store";
 import { useBarChartQuery } from "../../../redux/api/dashboardAPI";
 import { getLastMonths } from "../../../utils/features";
 
+const defaultBarChart = {
+  users: [0, 0, 0, 0, 0, 0],
+  products: [0, 0, 0, 0, 0, 0],
+  orders: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+};
+
 const Barcharts = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isLoading, isError } = useBarChartQuery(user?._id || "");
 
-  const charts = data?.charts;
-
   if (isError) return <Navigate to={"/admin/dashboard"} />;
-  if (!charts) return <div>No chart data available.</div>;
+
+  const charts = data?.charts || defaultBarChart;
 
   const { users, products, orders } = charts;
   const last12months = getLastMonths({
