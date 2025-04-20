@@ -1,6 +1,5 @@
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import toast from "react-hot-toast";
 import { BiMaleFemale } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
@@ -13,7 +12,6 @@ import { SkeletonLoader } from "../../components/loader";
 
 import { StoreRootState } from "../../redux/store";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
-import { CustomError } from "../../types/api-types";
 
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
@@ -21,17 +19,10 @@ const userImg =
 const Dashboard = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
-  const { data, isLoading, error, isError } = useStatsQuery(user?._id || "");
+  const { data, isLoading, isError } = useStatsQuery(user?._id || "");
   const stats = data?.stats;
 
-  useEffect(() => {
-    if (isError) {
-      const err = error as CustomError;
-      toast.error(err.data.message);
-    }
-  }, [isError, error]);
-
-  if (!stats) return <></>;
+  if (isError || !stats) return <Navigate to={"/"} />;
 
   return (
     <div className="admin-container">

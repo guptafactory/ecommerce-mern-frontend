@@ -129,6 +129,15 @@ export type PieChart = {
 export type LineChart = {
   users: FixedLengthArray<number, 12>;
   products: FixedLengthArray<number, 12>;
-  discount: FixedLengthArray<number, 12>;
-  revenue: FixedLengthArray<number, 12>;
+  discounts: FixedLengthArray<number, 12>;
+  revenues: FixedLengthArray<number, 12>;
 };
+
+export type MonthFormat = "long" | "short" | "narrow";
+
+export interface GetMonthsOptions {
+  count: number; // e.g., 6 or 12
+  format?: MonthFormat;
+  locale?: string;
+  reverse?: boolean; // Oldest to newest if true
+}
