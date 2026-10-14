@@ -5,8 +5,5 @@ export type MessageResponse = {
 
 export type CustomError = {
   status: number;
-  data: {
-    message: string;
-    success: boolean;
-  };
+  data: MessageResponse;
 };

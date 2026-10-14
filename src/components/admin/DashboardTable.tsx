@@ -1,4 +1,4 @@
-import { Column } from "react-table";
+import { AppColumnDef } from "./tableFeatures";
 import TableHOC from "./TableHOC";
 
 type DataType = {
@@ -9,26 +9,26 @@ type DataType = {
   status: string;
 };
 
-const columns: Column<DataType>[] = [
+const columns: AppColumnDef<DataType>[] = [
   {
-    Header: "Id",
-    accessor: "_id",
+    header: "Id",
+    accessorKey: "_id",
   },
   {
-    Header: "Quantity",
-    accessor: "quantity",
+    header: "Quantity",
+    accessorKey: "quantity",
   },
   {
-    Header: "Discount",
-    accessor: "discount",
+    header: "Discount",
+    accessorKey: "discount",
   },
   {
-    Header: "Amount",
-    accessor: "amount",
+    header: "Amount",
+    accessorKey: "amount",
   },
   {
-    Header: "Status",
-    accessor: "status",
+    header: "Status",
+    accessorKey: "status",
   },
 ];
 
@@ -37,7 +37,7 @@ const DashboardTable = ({ data = [] }: { data: DataType[] }) => {
     columns,
     data,
     "transaction-box",
-    "Top Transaction"
+    "Top Transaction",
   )();
 };
 

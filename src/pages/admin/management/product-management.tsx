@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
@@ -94,14 +94,16 @@ const ProductManagement = () => {
     responseToast(res, navigate, "/admin/products");
   };
 
-  useEffect(() => {
+  const [prevData, setPrevData] = useState(data);
+  if (data !== prevData) {
+    setPrevData(data);
     if (data) {
       setNameUpdate(data.product.name);
       setCategoryUpdate(data.product.category);
       setPriceUpdate(data.product.price);
       setStockUpdate(data.product.stock);
     }
-  }, [data]);
+  }
 
   if (isError) return <Navigate to={"/404"} />;
 

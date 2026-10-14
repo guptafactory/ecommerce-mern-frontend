@@ -27,10 +27,10 @@ const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
 const Toss = lazy(() => import("./pages/admin/apps/toss"));
 const NewProduct = lazy(() => import("./pages/admin/management/new-product"));
 const ProductManagement = lazy(
-  () => import("./pages/admin/management/product-management")
+  () => import("./pages/admin/management/product-management"),
 );
 const TransactionManagement = lazy(
-  () => import("./pages/admin/management/transaction-management")
+  () => import("./pages/admin/management/transaction-management"),
 );
 
 // Components
@@ -45,24 +45,30 @@ import { StoreRootState } from "./redux/store";
 
 function App() {
   const { user, loading } = useSelector(
-    (state: StoreRootState) => state.userReducer
+    (state: StoreRootState) => state.userReducer,
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const data = await getUser(user.uid);
-        dispatch(userExist(data.user));
-      } else {
-        dispatch(userNotExist());
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (firebaseUser) {
+          const data = await getUser(firebaseUser.uid);
+          dispatch(userExist(data.user));
+        } else {
+          dispatch(userNotExist());
+        }
+      } catch (error) {
+        console.error("Failed to load user", error);
+        dispatch(userNotExist()); // always leave the loading state
       }
     });
+    return unsubscribe;
   }, [dispatch]);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  if (loading) return <Loader />;
+
+  return (
     <Router>
       <Header user={user} />
       <Suspense fallback={<Loader />}>
@@ -96,9 +102,9 @@ function App() {
           <Route
             element={
               <ProtectedRoute
-                isAuthenticated={true}
+                isAuthenticated={user ? true : false}
                 adminOnly={true}
-                admin={user?.role === "admin" ? true : false}
+                admin={user?.role === "admin"}
               />
             }
           >

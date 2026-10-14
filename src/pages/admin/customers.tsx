@@ -1,6 +1,6 @@
-import { ReactElement, useState, useEffect, useCallback } from "react";
+import { ReactElement, useMemo, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Column } from "react-table";
+import { AppColumnDef } from "../../components/admin/tableFeatures";
 import { FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
 
@@ -25,30 +25,30 @@ type DataType = {
   action: ReactElement;
 };
 
-const columns: Column<DataType>[] = [
+const columns: AppColumnDef<DataType>[] = [
   {
-    Header: "Avatar",
-    accessor: "avatar",
+    header: "Avatar",
+    accessorKey: "avatar",
   },
   {
-    Header: "Name",
-    accessor: "name",
+    header: "Name",
+    accessorKey: "name",
   },
   {
-    Header: "Gender",
-    accessor: "gender",
+    header: "Gender",
+    accessorKey: "gender",
   },
   {
-    Header: "Email",
-    accessor: "email",
+    header: "Email",
+    accessorKey: "email",
   },
   {
-    Header: "Role",
-    accessor: "role",
+    header: "Role",
+    accessorKey: "role",
   },
   {
-    Header: "Action",
-    accessor: "action",
+    header: "Action",
+    accessorKey: "action",
   },
 ];
 
@@ -58,54 +58,51 @@ const Customers = () => {
   const { data, isLoading, isError, error } = useAllUsersQuery(user?._id || "");
   const [deleteUser] = useDeleteUserMutation();
 
-  const [rows, setRows] = useState<DataType[]>([]);
-
   const deleteHandler = useCallback(
     async (userId: string) => {
       const res = await deleteUser({ userId, adminId: user?._id || "" });
       responseToast(res, null, "");
     },
-    [deleteUser, user]
+    [deleteUser, user],
   );
 
-  useEffect(() => {
-    if (data) {
-      setRows(
-        data.users.map((user) => ({
-          avatar: (
-            <img
-              style={{
-                borderRadius: "50%",
-              }}
-              src={user.photo}
-              alt={`${user.name} avatar`}
-            />
-          ),
-          name: user.name,
-          email: user.email,
-          gender: user.gender,
-          role: user.role,
-          action: (
-            <button>
-              <FaTrash onClick={() => deleteHandler(user._id)} />
-            </button>
-          ),
-        }))
-      );
-    }
+  const rows = useMemo<DataType[]>(() => {
+    if (!data) return [];
+    return data.users.map((user) => ({
+      avatar: (
+        <img
+          style={{
+            borderRadius: "50%",
+          }}
+          src={user.photo}
+          alt={`${user.name} avatar`}
+        />
+      ),
+      name: user.name,
+      email: user.email,
+      gender: user.gender,
+      role: user.role,
+      action: (
+        <button>
+          <FaTrash onClick={() => deleteHandler(user._id)} />
+        </button>
+      ),
+    }));
+  }, [data, deleteHandler]);
 
+  useEffect(() => {
     if (isError) {
       const err = error as CustomError;
       toast.error(err.data.message);
     }
-  }, [data, isError, error, deleteHandler]);
+  }, [isError, error]);
 
   const Table = TableHOC<DataType>(
     columns,
     rows,
     "dashboard-product-box",
     "Customers",
-    rows.length > 6
+    rows.length > 6,
   )();
 
   return (

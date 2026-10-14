@@ -25,7 +25,7 @@ const defaultOrder: Order = {
   shippingCharges: 0,
   discount: 0,
   total: 0,
-  status: "",
+  status: "Processing",
   orderItems: [],
   shippingInfo: {
     address: "",
@@ -132,8 +132,8 @@ const TransactionManagement = () => {
                     status === "Delivered"
                       ? "purple"
                       : status === "Shipped"
-                      ? "green"
-                      : "red"
+                        ? "green"
+                        : "red"
                   }
                 >
                   {status}

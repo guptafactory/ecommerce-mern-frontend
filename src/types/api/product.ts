@@ -37,13 +37,6 @@ export type CreateProductRequest = {
 
 export type CreateProductResponse = MessageResponse & Product;
 
-// export type CreateProductResponse = MessageResponse & {
-//   name: string;
-//   category: string;
-//   price: number;
-//   stock: number;
-// };
-
 export type UpdateProductRequest = {
   userId: string;
   productId: string;

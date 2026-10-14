@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Column } from "react-table";
+import { AppColumnDef } from "../components/admin/tableFeatures";
 import toast from "react-hot-toast";
 
 import { useMyOrdersQuery } from "../redux/api/orderAPI";
@@ -20,26 +20,26 @@ type DataType = {
   action: ReactElement;
 };
 
-const column: Column<DataType>[] = [
+const column: AppColumnDef<DataType>[] = [
   {
-    Header: "ID",
-    accessor: "_id",
+    header: "ID",
+    accessorKey: "_id",
   },
   {
-    Header: "Amount",
-    accessor: "amount",
+    header: "Amount",
+    accessorKey: "amount",
   },
   {
-    Header: "Quantity",
-    accessor: "quantity",
+    header: "Quantity",
+    accessorKey: "quantity",
   },
   {
-    Header: "Discount",
-    accessor: "discount",
+    header: "Discount",
+    accessorKey: "discount",
   },
   {
-    Header: "Status",
-    accessor: "status",
+    header: "Status",
+    accessorKey: "status",
   },
 ];
 
@@ -48,45 +48,43 @@ const Orders = () => {
 
   const { data, isLoading, isError, error } = useMyOrdersQuery(user?._id || "");
 
-  const [rows, setRows] = useState<DataType[]>([]);
+  const rows = useMemo<DataType[]>(() => {
+    if (!data) return [];
+    return data.orders.map((order) => ({
+      _id: order._id,
+      amount: order.total,
+      discount: order.discount,
+      status: (
+        <span
+          className={
+            order.status === "Processing"
+              ? "red"
+              : order.status === "Shipped"
+                ? "green"
+                : "purple"
+          }
+        >
+          {order.status}
+        </span>
+      ),
+      quantity: order.orderItems.length,
+      action: <Link to={`/order/${order._id}`}>View</Link>,
+    }));
+  }, [data]);
 
   useEffect(() => {
-    if (data) {
-      setRows(
-        data.orders.map((order) => ({
-          _id: order._id,
-          amount: order.total,
-          discount: order.discount,
-          status: (
-            <span
-              className={
-                order.status === "Processing"
-                  ? "red"
-                  : order.status === "Shipped"
-                  ? "green"
-                  : "purple"
-              }
-            >
-              {order.status}
-            </span>
-          ),
-          quantity: order.orderItems.length,
-          action: <Link to={`/order/${order._id}`}>View</Link>,
-        }))
-      );
-    }
     if (isError) {
       const err = error as CustomError;
       toast.error(err.data.message);
     }
-  }, [data, isError, error]);
+  }, [isError, error]);
 
   const Table = TableHOC<DataType>(
     column,
     rows,
     "dashboard-product-box",
     "Orders",
-    rows.length > 6
+    rows.length > 6,
   )();
   return (
     <div className="container">

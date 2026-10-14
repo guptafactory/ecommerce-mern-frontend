@@ -58,7 +58,7 @@ const Shipping = () => {
   };
 
   useEffect(() => {
-    if (cartItems.length == 0) return navigate("/cart");
+    if (cartItems.length == 0) navigate("/cart");
   }, [cartItems, navigate]);
 
   return (

@@ -1,8 +1,8 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Column } from "react-table";
+import { AppColumnDef } from "../../components/admin/tableFeatures";
 import toast from "react-hot-toast";
 
 import AdminSidebar from "../../components/admin/AdminSidebar";
@@ -22,26 +22,26 @@ type DataType = {
   action: ReactElement;
 };
 
-const columns: Column<DataType>[] = [
+const columns: AppColumnDef<DataType>[] = [
   {
-    Header: "Name",
-    accessor: "name",
+    header: "Name",
+    accessorKey: "name",
   },
   {
-    Header: "Price",
-    accessor: "price",
+    header: "Price",
+    accessorKey: "price",
   },
   {
-    Header: "Stock",
-    accessor: "stock",
+    header: "Stock",
+    accessorKey: "stock",
   },
   {
-    Header: "Photo",
-    accessor: "photo",
+    header: "Photo",
+    accessorKey: "photo",
   },
   {
-    Header: "Action",
-    accessor: "action",
+    header: "Action",
+    accessorKey: "action",
   },
 ];
 
@@ -49,35 +49,33 @@ const Products = () => {
   const { user } = useSelector((state: StoreRootState) => state.userReducer);
 
   const { data, isError, error, isLoading } = useAllProductsQuery(
-    user?._id || ""
+    user?._id || "",
   );
-  const [rows, setRows] = useState<DataType[]>([]);
+  const rows = useMemo<DataType[]>(() => {
+    if (!data) return [];
+    return data.products.map((product) => ({
+      key: product._id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      photo: <img src={`${server}/${product.photo}`} alt="Shoes" />,
+      action: <Link to={`/admin/product/${product._id}`}>Manage</Link>,
+    }));
+  }, [data]);
 
   useEffect(() => {
-    if (data) {
-      setRows(
-        data.products.map((product) => ({
-          key: product._id,
-          name: product.name,
-          price: product.price,
-          stock: product.stock,
-          photo: <img src={`${server}/${product.photo}`} alt="Shoes" />,
-          action: <Link to={`/admin/product/${product._id}`}>Manage</Link>,
-        }))
-      );
-    }
     if (isError) {
       const err = error as CustomError;
       toast.error(err.data.message);
     }
-  }, [data, isError, error]);
+  }, [isError, error]);
 
   const Table = TableHOC<DataType>(
     columns,
     rows,
     "dashboard-product-box",
     "Products",
-    rows.length > 6
+    rows.length > 6,
   )();
 
   return (

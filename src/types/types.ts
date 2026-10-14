@@ -47,7 +47,7 @@ export type Order = {
   shippingCharges: number;
   discount: number;
   total: number;
-  status: string;
+  status: "Processing" | "Shipped" | "Delivered";
   orderItems: OrderItem[];
   shippingInfo: ShippingInfo;
 };
@@ -57,7 +57,7 @@ export type Order = {
 type FixedLengthArray<
   T,
   L extends number,
-  R extends unknown[] = []
+  R extends unknown[] = [],
 > = R["length"] extends L ? R : FixedLengthArray<T, L, [T, ...R]>;
 
 export type Stats = {
